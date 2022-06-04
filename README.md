@@ -1,5 +1,5 @@
 # Homeify Dapp
-![](https://github.com/dacadeorg/celo-development-101/blob/main/content/gifs/celo_trailer_02.gif)
+
 
 ## Description
 This is a very simple marketplace dapp where users can:
@@ -11,7 +11,7 @@ This is a very simple marketplace dapp where users can:
 * Filter products by latest date of sale or number of times sold
 
 ## Live Demo
-[Marketplace Dapp](https://dacadeorg.github.io/celo-marketplace-dapp/)
+[Marketplace Dapp](https://darkmoonlit.github.io/Homeify-Dapp/)
 
 ## Usage
 
