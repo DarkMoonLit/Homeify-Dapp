@@ -65,7 +65,7 @@ export function renderProducts(_products, _kit) {
     const buyBtnText = `Buy for ${_product.price
       .shiftedBy(-ERC20_DECIMALS)
       .toFixed(2)} cUSD`;
-    const setForSaleText = `Change forSale to ${
+    const setForSaleText = `Change to ${
       _product.forSale ? "Not for sale" : "For sale"
     }`;
     newButton.innerHTML =
