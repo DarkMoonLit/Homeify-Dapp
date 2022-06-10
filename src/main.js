@@ -171,8 +171,12 @@ document.querySelector("#marketplace").addEventListener("click", async (e) => {
     notification(
       `Changing Sale status of ${products[index].name}, please wait`
     );
+
     try {
-      await contract.methods.setForSale(index);
+      await contract.methods
+        .setForSale(index)
+        .send({ from: kit.defaultAccount });
+      getProducts();
       notification(
         `You successfully  changed the sale status to ${
           products[index].forSale ? "on sale" : "Not available"
@@ -194,7 +198,7 @@ document.querySelector("#create-btn").addEventListener("click", (e) => {
 // filter by date event handler
 document.querySelector("#sort-date").addEventListener("click", async (e) => {
   document.getElementById("marketplace").innerHTML = "";
-  notification("Awaiting filtering of products by date, please wait");
+  notification("Awaiting filtering of products by date of sale, please wait");
   const dates = await contract.methods.sortItems("dateOfSale").call(); // array of dateOfSale is returned
   // assigns date to its respective product
   for (let i = 0; i < products.length; i++) {
@@ -203,8 +207,8 @@ document.querySelector("#sort-date").addEventListener("click", async (e) => {
   }
   // products array is rearranged by latest dateOfSale
   products.sort((a, b) => b.date - a.date);
-  notification("Successfully rearranged products by date created");
-  renderProducts(products);
+  notification("Successfully rearranged products by date of sale");
+  renderProducts(products, kit);
 });
 
 // filter by times sold event handler
@@ -218,7 +222,7 @@ document.querySelector("#sort-sales").addEventListener("click", async (e) => {
     products[result].salesCount = salesCount[i];
   }
   products.sort((a, b) => b.salesCount - a.salesCount);
-  renderProducts(products);
+  renderProducts(products, kit);
   notification("Successfully rearranged products by sales count");
 });
 
