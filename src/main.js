@@ -2,15 +2,9 @@
     Imports
 
 */
-import Web3 from "web3";
-import { newKitFromWeb3 } from "@celo/contractkit";
 import BigNumber from "bignumber.js";
-import homeifyAbi from "../contract/homeify.abi.json";
-import erc20Abi from "../contract/erc20.abi.json";
 import {
   ERC20_DECIMALS,
-  HIContractAddress,
-  cUSDContractAddress,
 } from "./constants";
 import {
   notification,
@@ -139,20 +133,23 @@ document.querySelector("#marketplace").addEventListener("click", async (e) => {
   if (e.target.className.includes("buy-Btn")) {
     const index = e.target.id;
     const salesFee = new BigNumber(await contract.methods.getSalesFee().call());
-    notification(
-      `⌛ Waiting for payment approval for ${salesFee
-        .shiftedBy(-ERC20_DECIMALS)
-        .toFixed(2)} cUSD...`
-    );
     try {
-      const total = salesFee + products[index].price; // ensures fee paid to contract owner is also approved
-      await approve(total, kit);
+      const productPrice = Number(new BigNumber(products[index].price).shiftedBy(-ERC20_DECIMALS).toString())
+      const totalSalesFee = Number(salesFee .shiftedBy(-ERC20_DECIMALS)
+          .toString())
+      const total = totalSalesFee  +  productPrice; // ensures fee paid to contract owner is also approved
+    notification(
+      `⌛ Waiting for payment approval for sales fee and price which costs ${total} cUSD...`
+    );
+
+
+      // await approve(total, kit);
     } catch (error) {
       notification(`⚠️ ${error}.`);
     }
     notification(`⌛ Awaiting payment for "${products[index].name}"...`);
     try {
-      const result = await contract.methods
+      await contract.methods
         .sellFurniture(index)
         .send({ from: kit.defaultAccount });
       notification(`🎉 You successfully bought "${products[index].name}".`);
@@ -196,7 +193,8 @@ document.querySelector("#create-btn").addEventListener("click", (e) => {
 });
 
 // filter by date event handler
-document.querySelector("#sort-date").addEventListener("click", async (e) => {
+document.querySelector("#sort-date").addEventListener("click", async (e) =>
+{
   document.getElementById("marketplace").innerHTML = "";
   notification("Awaiting filtering of products by date of sale, please wait");
   const dates = await contract.methods.sortItems("dateOfSale").call(); // array of dateOfSale is returned
